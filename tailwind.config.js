@@ -236,7 +236,7 @@ const size = {
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-    mode: 'jit',
+    //mode: 'jit',
     purge: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './vendor/laravel/jetstream/**/*.blade.php',
@@ -251,9 +251,10 @@ module.exports = {
             },
             colors: colors,
             fontSize: size
-        },
+        }
     },
     variants: {
+      extend: {
         backgroundColor: ['responsive', 'even', 'hover', 'focus'],
         cursor: ['hover', 'focus', 'disabled'],
         opacity: ['responsive', 'hover', 'focus', 'disabled'],
@@ -261,8 +262,14 @@ module.exports = {
         borderColor: ['responsive', 'hover', 'focus'],
         borderStyle: ['responsive', 'hover', 'focus'],
         borderWidth: ['responsive', 'hover', 'focus'],
+        overflow: ['hover', 'focus'],
+      }
     },
 
 
     plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+
+    corePlugins: {
+      container: false,
+    }
 };

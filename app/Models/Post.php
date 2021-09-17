@@ -11,6 +11,20 @@ class Post extends Model
     use HasFactory;    
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'user_id',
+        'category_id',
+        'name',
+        'slug',
+        'extract',
+        'body',
+        'status',
+    ];
 
     /**
      * Get the user that owns the posts.
@@ -35,7 +49,7 @@ class Post extends Model
 
     public function image()
     {
-        return this->morphOne(Image::class, 'imageable');
+        return $this->morphOne(Image::class, 'imageable');
     }
 
 }

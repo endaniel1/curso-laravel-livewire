@@ -14,7 +14,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::where('status', 2)->latest('id')->paginate(8);
+
+        return view('posts.index')->with('posts', $posts);
     }
 
     /**
@@ -46,7 +48,16 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $similares = Post::where('category_id', $post->category_id)
+                        ->where('status', 2)
+                        ->where('id', '!=', $post->id)
+                        ->latest('id')
+                        ->take(4)
+                        ->get();
+
+        return view('posts.show')
+                ->with('post', $post)
+                ->with('similares', $similares);
     }
 
     /**
