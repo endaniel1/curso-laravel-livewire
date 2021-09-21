@@ -11,6 +11,23 @@ class Tag extends Model
     use HasFactory;
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'name',
+        'slug',
+        'color',
+    ];
+
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     public function posts()
     {
         return $this->belongsToMany(Post::class);
