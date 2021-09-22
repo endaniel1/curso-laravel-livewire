@@ -16,14 +16,10 @@ class Post extends Model
      *
      * @var string[]
      */
-    protected $fillable = [
-        'user_id',
-        'category_id',
-        'name',
-        'slug',
-        'extract',
-        'body',
-        'status',
+    protected $guarded = [
+        'id',
+        'created_at',
+        'update_at',
     ];
 
     /**

@@ -8,6 +8,12 @@
 
 @section('content')
     <p>Welcome to this beautiful admin panel.</p>
+    
+    @if(session('info'))
+        <div class="alert alert-success">
+            <strong>{{ session('info') }}</strong>
+        </div>
+    @endif
 @stop
 
 @section('css')
