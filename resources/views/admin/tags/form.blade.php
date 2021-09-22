@@ -8,7 +8,7 @@
 </div>
 
 <div class="form-group">
-	<label for="name" class="">Slug</label>
+	<label for="slug" class="">Slug</label>
 	<input type="text" name="slug" id="slug" value="{{ old('slug', $tag->slug) }}" class="form-control" placeholder="Slug de la Categoria" readonly="readonly">
 
 	@error('slug')
