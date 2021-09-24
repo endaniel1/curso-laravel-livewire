@@ -3,23 +3,25 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Editando Post</h1>
+    <h1>Editar Post</h1>
 @stop
 
 @section('content')
-    <p>Welcome to this beautiful admin panel.</p>
-    
     @if(session('info'))
         <div class="alert alert-success">
             <strong>{{ session('info') }}</strong>
         </div>
     @endif
-@stop
 
-@section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-@stop
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ route('admin.posts.update', $post) }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
-@section('js')
-    <script> console.log('Hi!'); </script>
+                @method('PUT')
+                
+                @include('admin.posts.form')
+            </form>
+        </div>
+    </div>
 @stop

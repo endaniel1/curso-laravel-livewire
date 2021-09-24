@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Category;
 use App\Models\Tag;
-use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\{PostRequest, PostRequest2};
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -49,10 +49,10 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\StorePostRequest  $request
+     * @param  \Illuminate\Http\PostRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePostRequest $request)
+    public function store(PostRequest $request)
     {
         $post = Post::create($request->all());
 
@@ -75,12 +75,13 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        //
+        return view('admin.posts.show')
+                ->with('post', $post);
     }
 
     /**
@@ -104,13 +105,38 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\PostRequest  $request
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
-        //
+        $post->fill($request->all());
+
+        if ($request->file('file')) {
+            $url = Storage::disk('public')->put('images', $request->file('file'));
+
+            if ($post->image) {                
+                Storage::disk('public')->delete($post->image->url);
+            
+                $post->image->update([
+                    'url' => $url
+                ]);
+            }else{
+                $post->image()->create([
+                    'url' => $url
+                ]);                
+            }
+        }
+
+        if ($request->tags) {
+            $post->tags()->sync($request->tags);
+        }
+
+        $post->save();
+
+        return redirect()->route('admin.posts.edit', $post)
+                ->with('info', 'La Post Actualizado Existosamente');
     }
 
     /**
@@ -150,7 +176,7 @@ class PostController extends Controller
         $post->restore();
 
         return redirect()->route('admin.posts.trash')
-                ->with('info', 'La Categoría Restaurada');
+                ->with('info', 'La Post Restaurado');
     }
 
     /**
@@ -163,9 +189,13 @@ class PostController extends Controller
     {
         $post = Post::onlyTrashed()->where('id', $id)->first();
 
+        if(Storage::disk('public')->exists($post->image->url)) {
+            Storage::disk('public')->delete($post->image->url);
+        }
+
         $post->forceDelete();
 
         return redirect()->route('admin.posts.trash')
-                ->with('info', 'La Categoría Eliminada Permanentemente');
+                ->with('info', 'La Post Eliminado Permanentemente');
     }
 }

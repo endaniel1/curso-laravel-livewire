@@ -23,7 +23,7 @@
 	<select name="category_id" id="categories" class="form-control">
 		<option>Selecione un categoria</option>
 		@foreach($categories as $category)
-			<option value="{{ $category->id }}"  {{ old('category_id', $post->category_id) == $category->id ? 'selected="selected"': '' }}>{{ $category->name }}</option>
+			<option value="{{ $category->id }}"  {{ old('category_id', $post->category_id) == $category->id ? "selected": '' }}>{{ $category->name }}</option>
 		@endforeach
 	</select>
 	@error('category_id')
@@ -35,7 +35,7 @@
 	<p class="font-weight-bold">Etiquetas</p>
 		@foreach($tags as $tag)
 		<label for="" class="mr-2">
-			<input type="checkbox" name="tags[]" value="{{ $tag->id }}">
+			<input type="checkbox" name="tags[]" value="{{ $tag->id }}" {{ in_array($tag->id, $post->tags->pluck('id')->toArray()) ? 'checked="checkbox"' : '' }}>
 			{{ $tag->name }}
 		</label>
 		@endforeach
@@ -66,8 +66,12 @@
 
 <div class="row">
 	<div class="col">
-		<div class="image-wrapper mb-3">					
-			<img src="https://cdn.pixabay.com/photo/2021/09/15/21/29/lake-6627781_960_720.jpg" alt="" class="" id="picture">
+		<div class="image-wrapper mb-3">	
+			@if($post->image)
+				<img src="{{ Storage::url($post->image->url) }}" alt="" class="" id="picture">
+			@else
+				<img src="https://cdn.pixabay.com/photo/2021/09/15/21/29/lake-6627781_960_720.jpg" alt="" class="" id="picture">
+			@endif				
 		</div>
 	</div>
 	<div class="col">
@@ -148,7 +152,7 @@
         });
 
         //cambiar Image
-				document.getElementById("file").addEventListener('change', cambiarImagen);
+		document.getElementById("file").addEventListener('change', cambiarImagen);
 
         function cambiarImagen(event){
             var file = event.target.files[0];
