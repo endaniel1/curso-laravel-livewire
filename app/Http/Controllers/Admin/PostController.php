@@ -9,7 +9,6 @@ use App\Models\Category;
 use App\Models\Tag;
 use App\Http\Requests\{PostRequest, PostRequest2};
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -92,6 +91,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        $this->authorize('author', $post);
+
         $categories = Category::all();
 
         $tags = Tag::all();
@@ -111,6 +112,8 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $post)
     {
+        $this->authorize('author', $post);
+
         $post->fill($request->all());
 
         if ($request->file('file')) {
@@ -142,12 +145,17 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        //
+        $this->authorize('author', $post); 
+
+        $post->delete();
+
+        return redirect()->route('admin.posts.index')
+                ->with('info', 'Post Eliminado Existosamente');
     }
 
     /**
@@ -157,7 +165,7 @@ class PostController extends Controller
      * */
     public function trash()
     {
-        $posts = Post::onlyTrashed()->get();
+        $posts = Post::onlyTrashed()->paginate();
     
         return view('admin.posts.trash')
                 ->with('posts', $posts);
@@ -187,11 +195,9 @@ class PostController extends Controller
      */
     public function delete(int $id)
     {
-        $post = Post::onlyTrashed()->where('id', $id)->first();
+        $this->authorize('author', $post);
 
-        if(Storage::disk('public')->exists($post->image->url)) {
-            Storage::disk('public')->delete($post->image->url);
-        }
+        $post = Post::onlyTrashed()->where('id', $id)->first();
 
         $post->forceDelete();
 

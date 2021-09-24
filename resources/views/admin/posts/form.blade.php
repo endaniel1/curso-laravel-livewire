@@ -1,5 +1,3 @@
-<input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-
 <div class="form-group">
 	<label for="name" class="">Nombre</label>
 	<input type="text" name="name" id="name" value="{{ old('name', $post->name) }}" class="form-control" placeholder="Nombre del Post" autocomplete="off">
