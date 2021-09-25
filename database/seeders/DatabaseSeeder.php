@@ -20,10 +20,13 @@ class DatabaseSeeder extends Seeder
         Storage::deleteDirectory('images');
         Storage::makeDirectory('public/images');
 
+        $this->call(RoleSeeder::class);
+
         // \App\Models\User::factory(10)->create();
         $this->call(UserSeeder::class);
         Category::factory(4)->create();
         Tag::factory(8)->create();
         $this->call(PostSeeder::class);
+
     }
 }

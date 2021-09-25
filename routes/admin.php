@@ -6,9 +6,15 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('', [HomeController::class, 'index'])->name('admin.home');
 
+
+Route::get('/users/trash', [UserController::class, 'trash'])->name('admin.users.trash');
+Route::get('/users/{id}/restore', [UserController::class, 'restore'])->name('admin.users.restore')->where('id', '[0-9]+');
+Route::patch('/users/{id}/delete', [UserController::class, 'delete'])->name('admin.users.delete')->where('id', '[0-9]+');
+Route::resource('users', UserController::class)->names('admin.users');
 
 Route::get('/categories/trash', [CategoryController::class, 'trash'])->name('admin.categories.trash');
 Route::get('/categories/{id}/restore', [CategoryController::class, 'restore'])->name('admin.categories.restore')->where('id', '[0-9]+');

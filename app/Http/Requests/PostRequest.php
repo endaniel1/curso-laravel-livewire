@@ -44,8 +44,7 @@ class PostRequest extends FormRequest
                 'extract' => ['required'],
                 'body' => ['required'],
             ]);
-        }
-        
+        }        
         
         return $rules;
     }
