@@ -12,6 +12,32 @@ use Spatie\Permission\Models\Role;
 class UserController extends Controller
 {
     /**
+     * Instantiate a new controller instance.
+     * 
+     * @return void
+    */
+    public function __construct()
+    {
+        $this->middleware(['can:admin.users.index'])->only('index');
+        $this->middleware(['can:admin.users.create'])->only('create', 'store');
+        $this->middleware(['can:admin.users.edit'])->only('edit', 'update');
+        $this->middleware(['can:admin.users.trash'])->only('trash');
+        $this->middleware(['can:admin.users.restore'])->only('restore');
+        $this->middleware(['can:admin.users.delete'])->only('delete');
+    }
+
+    /**
+     * Instantiate a new controller instance.
+     * 
+     * @return void
+    */
+    public function __construct()
+    {
+        $this->middleware(['can:admin.users.index'])->only('index');
+        $this->middleware(['can:admin.users.edit'])->only('edit', 'update');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -57,17 +83,6 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.edit', $user)
                 ->with('info', 'El Usuario se actualizo con existo');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
     }
 
     /**

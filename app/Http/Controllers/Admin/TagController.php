@@ -9,6 +9,21 @@ use Illuminate\Http\Request;
 class TagController extends Controller
 {
     /**
+     * Instantiate a new controller instance.
+     * 
+     * @return void
+    */
+    public function __construct()
+    {
+        $this->middleware(['can:admin.tags.index'])->only('index');
+        $this->middleware(['can:admin.tags.create'])->only('create', 'store');
+        $this->middleware(['can:admin.tags.edit'])->only('edit', 'update');
+        $this->middleware(['can:admin.tags.trash'])->only('trash');
+        $this->middleware(['can:admin.tags.restore'])->only('restore');
+        $this->middleware(['can:admin.tags.delete'])->only('delete');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -53,17 +68,6 @@ class TagController extends Controller
         return redirect()->route('admin.tags.edit', $tag)
                 ->with('info', 'La Etiqueta se agrego con existo');
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Tag $tag)
-    {
-        return view('admin.tags.show')->with('tag', $tag);
     }
 
     /**

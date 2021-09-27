@@ -16,14 +16,20 @@
     @endif
 
     <div class="card">
+        
         <div class="card-header text-right">
-            <a href="{{ route('admin.categories.create') }}" class="btn btn-secondary">
-                Agregar Categoria <i class="fas fa-plus fa-fw"></i>
-            </a>
+            @can('admin.categories.create')
+                <a href="{{ route('admin.categories.create') }}" class="btn btn-secondary">
+                    Agregar Categoria <i class="fas fa-plus fa-fw"></i>
+                </a>
+            @endcan
+
+            @can('admin.categories.trash')
             <a href="{{ route('admin.categories.trash') }}" class="btn btn-danger">
                 Papelera
                 <i class="fas fa-trash fa-fw"></i>
             </a>
+            @endcan
         </div>
 
         <div class="card-body">
@@ -37,7 +43,7 @@
                             Name
                         </th>
                         <th colspan="2" align="center">
-                            Opciones
+                            
                         </th>
                     </tr>
                 </thead> 
@@ -47,19 +53,23 @@
                             <td>{{ $category->id }}</td>
                             <td>{{ $category->name }}</td>
                             <td width="15px">
-                                <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-primary btn-sm">
-                                   <i class="fas fa-edit fa-fw"></i>
-                                </a>
+                                @can('admin.categories.edit')
+                                    <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-primary btn-sm">
+                                       <i class="fas fa-edit fa-fw"></i>
+                                    </a>
+                                @endcan
                             </td>
                             <td width="15px">
-                                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST">
-                                    @csrf
-                                    @method('delete')
+                                @can('admin.categories.destroy')
+                                    <form action="{{ route('admin.categories.destroy', $category) }}" method="POST">
+                                        @csrf
+                                        @method('delete')
 
-                                    <button class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash fa-fw"></i>
-                                    </button>
-                                </form>
+                                        <button class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash fa-fw"></i>
+                                        </button>
+                                    </form>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

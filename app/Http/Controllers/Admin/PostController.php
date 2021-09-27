@@ -14,6 +14,21 @@ use Illuminate\Support\Facades\Storage;
 class PostController extends Controller
 {
     /**
+     * Instantiate a new controller instance.
+     * 
+     * @return void
+    */
+    public function __construct()
+    {
+        $this->middleware(['can:admin.posts.index'])->only('index');
+        $this->middleware(['can:admin.posts.create'])->only('create', 'store');
+        $this->middleware(['can:admin.posts.edit'])->only('edit', 'update');
+        $this->middleware(['can:admin.posts.trash'])->only('trash');
+        $this->middleware(['can:admin.posts.restore'])->only('restore');
+        $this->middleware(['can:admin.posts.delete'])->only('delete');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -66,18 +81,6 @@ class PostController extends Controller
 
         return redirect()->route('admin.posts.edit', $post)
                 ->with('info', 'La Post se agrego con existo');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Post $post)
-    {
-        return view('admin.posts.show')
-                ->with('post', $post);
     }
 
     /**
@@ -162,7 +165,18 @@ class PostController extends Controller
      * */
     public function trash()
     {
-        $posts = Post::onlyTrashed()->paginate();
+        $user = auth()->user();
+        $roles = $user->roles; //get roles
+        $admin = in_array('Admin', $roles->pluck('name')->toArray()); //check admin
+
+        if ($admin) {        
+            $posts = Post::onlyTrashed()
+                        ->paginate();
+        }else{        
+            $posts = Post::onlyTrashed()
+                        ->where('user_id', $user->id)
+                        ->paginate();
+        }
     
         return view('admin.posts.trash')
                 ->with('posts', $posts);

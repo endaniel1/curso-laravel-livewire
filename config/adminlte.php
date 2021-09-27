@@ -233,14 +233,10 @@ return [
         ],
         [
             'type'         => 'fullscreen-widget',
-            'topnav_right' => true,
+            'topnav_right' => false,
         ],
 
         // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
         [
             'text' => 'blog',
             'url'  => 'admin/blog',
@@ -249,20 +245,22 @@ return [
         [
             'text'        => 'Dashboard',
             'route'         => 'admin.home',
-            'icon'        => 'fas fa-tachometer-alt fa-fw'
+            'icon'        => 'fas fa-tachometer-alt fa-fw',
+            'can' => 'admin.home'
         ],
         [
             'text'        => 'Usuarios',
             'route'         => 'admin.users.index',
             'icon'        => 'fas fa-users fa-fw',
             'active' => ['admin/users*'],
+            'can' => 'admin.users.index'
         ],
-        ['header' => 'ADMINISTRADOR'],
         [
             'text' => 'Categorias',
             'route'  => 'admin.categories.index',
             'icon' => 'fab fa-fw fa-buffer',
             'active' => ['admin/categories*'],
+            'can' => 'admin.categories.index'
 
         ],
         [
@@ -270,17 +268,20 @@ return [
             'route'  => 'admin.tags.index',
             'icon' => 'far fa-fw fa-bookmark',
             'active' => ['admin/tags*'],
+            'can' => 'admin.tags.index'
         ],
         ['header' => 'Opciones de Blog'],
         [
             'text'       => 'Lista Post',
             'route'        => 'admin.posts.index',
             'icon' => 'far fa-fw fa-clipboard',
+            'can' => 'admin.posts.index'
         ],
         [
             'text'       => 'Crear Nuevo Post',
             'route'        => 'admin.posts.create',
             'icon' => 'far fa-fw fa-file',
+            'can' => 'admin.posts.create'
         ],
     ],
 

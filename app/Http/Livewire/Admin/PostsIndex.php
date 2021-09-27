@@ -22,10 +22,20 @@ class PostsIndex extends Component
 
     public function render()
     {
-        $posts = Post::where('user_id', auth()->user()->id)
-                ->where('name', 'LIKE', '%'. $this->search .'%')
-                ->latest('id')
-                ->paginate();
+        $user = auth()->user();
+        $roles = $user->roles; //get roles
+        $admin = in_array('Admin', $roles->pluck('name')->toArray()); //check admin
+
+        if ($admin) {
+            $posts = Post::where('name', 'LIKE', '%'. $this->search .'%')
+                        ->latest('id')
+                        ->paginate();
+        }else{
+            $posts = Post::where('user_id', $user->id)
+                        ->where('name', 'LIKE', '%'. $this->search .'%')
+                        ->latest('id')
+                        ->paginate();
+        }
 
         return view('livewire.admin.posts-index')
                 ->with('posts', $posts);

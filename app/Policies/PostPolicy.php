@@ -22,7 +22,10 @@ class PostPolicy
 
     public function author(User $user, Post $post)
     {
-        if ($user->id == $post->user_id) {
+        $roles = $user->roles; //get roles
+        $admin = in_array('Admin', $roles->pluck('name')->toArray()); //check admin
+
+        if ($user->id == $post->user_id || $admin) {
             return true;
         }else{
             return false;
