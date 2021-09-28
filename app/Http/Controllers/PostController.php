@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Cache;
+
 class PostController extends Controller
 {
     /**
@@ -14,9 +16,22 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::where('status', 2)->latest('id')->paginate(8);
+        if($request->page){ //vemos en q pagina estamos
+            $key = 'posts'. $request->page;
+        }else{
+            $key = 'posts';
+        }
+
+        //comprabamos si tenemos algo en la Cache
+        if (Cache::has($key)) {
+            $posts = Cache::get($key);
+        }else{
+            $posts = Post::where('status', 2)->latest('id')->paginate(8);
+
+            Cache::put($key, $posts);
+        }
 
         return view('posts.index')->with('posts', $posts);
     }

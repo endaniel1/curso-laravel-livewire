@@ -10,6 +10,7 @@ use App\Models\Tag;
 use App\Http\Requests\PostRequest;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class PostController extends Controller
 {
@@ -79,6 +80,9 @@ class PostController extends Controller
             $post->tags()->attach($request->tags);
         }
 
+        //para eliminar la cache para agregar
+        Cache::flush();
+
         return redirect()->route('admin.posts.edit', $post)
                 ->with('info', 'La Post se agrego con existo');
     }
@@ -138,6 +142,9 @@ class PostController extends Controller
 
         $post->save();
 
+        //para eliminar la cache para actualizar
+        Cache::flush();
+
         return redirect()->route('admin.posts.edit', $post)
                 ->with('info', 'La Post Actualizado Existosamente');
     }
@@ -153,6 +160,9 @@ class PostController extends Controller
         $this->authorize('author', $post); 
 
         $post->delete();
+
+        //para eliminar la cache para eliminar suave
+        Cache::flush();
 
         return redirect()->route('admin.posts.index')
                 ->with('info', 'Post Eliminado Existosamente');
@@ -194,6 +204,9 @@ class PostController extends Controller
 
         $post->restore();
 
+        //para eliminar la cache para restaurar
+        Cache::flush();
+
         return redirect()->route('admin.posts.trash')
                 ->with('info', 'La Post Restaurado');
     }
@@ -211,6 +224,9 @@ class PostController extends Controller
         $post = Post::onlyTrashed()->where('id', $id)->first();
 
         $post->forceDelete();
+
+        //para eliminar la cache para destruir
+        Cache::flush();
 
         return redirect()->route('admin.posts.trash')
                 ->with('info', 'La Post Eliminado Permanentemente');
